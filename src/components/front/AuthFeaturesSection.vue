@@ -14,7 +14,7 @@ const data = [
   {
     icon: ExclamationCircleIcon,
     title: "التنبيهات الطارئة",
-    text: "اشترك لنرسل لك اسعارالسلع عند انخفاضها عبر الرسائل النصية, حتى دون انترنت.",
+    text: "اشترك لنرسل لك أسعار السلع عند انخفاضها عبر الرسائل النصية, حتى دون انترنت.",
   },
   {
     icon: BuildingStorefrontIcon,
@@ -61,7 +61,7 @@ const data = [
             <p class="title text-gray-700 dark:text-gray-200 font-medium text-[18px] my-2">
               {{ item.title }}
             </p>
-            <p class="text text-[14px] text-gray-400 dark:text-gray-400">
+            <p class="text text-[14px] text-gray-600 dark:text-gray-400">
               {{ item.text }}
             </p>
           </template>

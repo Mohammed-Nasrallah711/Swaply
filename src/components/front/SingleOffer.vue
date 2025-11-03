@@ -80,7 +80,7 @@ const requestStatus = computed(() => {
         </div>
         <div class="">
           <span class="font-normal flex items-center">
-            <span class="text-lg text-gray-800 dark:text-white">{{
+            <span class="text-lg text-gray-800 dark:text-white font-medium">{{
               item.user.name
             }}</span>
             <span v-if="item.user.is_trusty"
@@ -93,8 +93,8 @@ const requestStatus = computed(() => {
                leading-none">موثوق</span>
             </span>
           </span>
-          <div class="degree text-gray-400 dark:text-gray-300 text-xs font-normal">
-            درجة الموثوقية 80%
+          <div class="degree text-gray-400 dark:text-gray-300 text-xs font-normal mt-1">
+            درجة الموثوقية: 80%
           </div>
         </div>
       </div>

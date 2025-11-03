@@ -4,7 +4,7 @@ import { ref, watch } from "vue";
 import { useAuthStore } from "./auth/auth";
 
 export const useThemeStore = defineStore("theme", () => {
-  // Initialize from localStorage immediately (synchronous with inline script in index.html)
+  // initialize from localStorage immediately (synchronous with inline script in index.html)
   const savedTheme = localStorage.getItem("theme");
   const currentTheme = ref(savedTheme === "dark" ? "dark" : "light");
   

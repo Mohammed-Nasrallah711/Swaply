@@ -180,7 +180,7 @@ onMounted(async () => {
       </template>
     </MainButton>
     <WarningAlert class="my-4" title="تنبيه أمني"
-      text="تاكد من لقاء الاشخاص في اماكن امنة. وتحقق من هوية الشخص و درجة الثقة قبل التبادل" />
+      text="تأكد من لقاء الاشخاص في اماكن امنة. وتحقق من هوية الشخص و درجة الثقة قبل التبادل" />
     <TradeDialog :model-value="isDialogOpen" @update:modelValue="(val) => (isDialogOpen = val)" :editData="editData"
       @success="fetchBarters" />
     <div class="offers">
@@ -268,12 +268,12 @@ onMounted(async () => {
     <ChatApp v-model:is-open="chat.isOpen" v-model:with="chat.with" v-model:is-user="chat.is_user" />
     <ChatSidebar v-model="dialog" @chatWith="chatWith($event)" v-model:numberOfUnRedChat="numberOfUnRedChat" />
 
-    <ConfirmDeleteDialog v-model="deleteDialog.dialog" title="حدف العرض" message="هل انت متاكد من حذف هذا العرض؟"
+    <ConfirmDeleteDialog v-model="deleteDialog.dialog" title="حدف العرض" message="هل انت متأكد من حذف هذا العرض؟"
       button-label="حذف العرض" @confirm="confirm" />
     <ConfirmDeleteDialog v-model="acceptDialog.dialog" title="قبول عملة التبادل"
-      message="هل انت متاكد من ارسال طلب لقبول هذه المقايضة؟" button-label="قبول" @confirm="acceptBarter" />
+      message="هل انت متأكد من ارسال طلب لقبول هذه المقايضة؟" button-label="قبول" @confirm="acceptBarter" />
     <ConfirmDeleteDialog v-model="acceptUserDialog.dialog" title="الموافقة على عملية التبادل"
-      message="هل انت متاكد على ارسال رد الموافقة على عملية التبادل هذه؟ عند ارسال رد الموافقة لن تتمكن من تغيير الشخص."
+      message="هل انت متأكد على ارسال رد الموافقة على عملية التبادل هذه؟ عند ارسال رد الموافقة لن تتمكن من تغيير الشخص."
       button-label="ارسال" @confirm="acceptUser" />
   </div>
 </template>

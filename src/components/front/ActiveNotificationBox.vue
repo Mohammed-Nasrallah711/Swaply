@@ -75,17 +75,17 @@ const removeFromNotification = async () => {
         </span>
         <span class="status flex items-center gap-2 mr-2">
           <span
-            class="active bg-black dark:bg-green-600 rounded font-medium text-[12px] text-white py-[5px] px-[18px] cursor-pointer transition-opacity hover:opacity-70"
+            class="active bg-green-700 dark:bg-green-600 rounded-2xl font-medium text-[12px] text-white py-[5px] px-[18px] cursor-pointer transition-opacity hover:opacity-70"
             v-if="isActive == 'active'" @click="updateStatus">
             نشط
           </span>
           <span
-            class="in-active bg-gray-200 dark:bg-gray-600 rounded font-medium text-[12px] text-black dark:text-white py-[5px] px-[18px] cursor-pointer transition-opacity hover:opacity-70"
+            class="in-active bg-gray-200 dark:bg-gray-600 rounded-2xl font-medium text-[12px] text-black dark:text-white py-[5px] px-[18px] cursor-pointer transition-opacity hover:opacity-70"
             v-else @click="updateStatus">
             متوقف
           </span>
           <span
-            class="alerted bg-red-600 rounded font-medium text-[12px] text-white py-[5px] px-2 cursor-default select-none"
+            class="alerted bg-red-600 rounded-2xl font-medium text-[12px] text-white py-[5px] px-2 cursor-default select-none"
             v-if="alerted">
             تم التنبيه
           </span>

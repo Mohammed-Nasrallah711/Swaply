@@ -15,16 +15,18 @@ import SingleFavoriteStructure from "./SingleFavoriteStructure.vue";
     </div>
 
     <SingleFavoriteStructure class="pb-0 border-none -mb-2" title="مهمتنا"
-      description="نبض الاسعار هو تطبيق مصمم لخدمة المجتمع في اوقات الازمات من خلال توفير معلومات دقيقة ومحديثة عن اسعار الموارد الاساسية والسلع." />
+      description="نبض هي منصة مصممة لخدمة المجتمع في أوقات الأزمات من خلال توفير معلومات دقيقة ومحدثة عن أسعار الموارد الأساسية والسلع." />
 
     <div class="mt-4">
       <span class="text-black dark:text-white font-medium text-[16px] mb-3 block">ميزاتنا</span>
       <span class="text-gray-600 dark:text-gray-300 font-medium text-[14px] mb-2 block">
         <ul class="list-disc pr-4">
-          <li class="mb-1">تتبع اسعار المواد الاساسية</li>
-          <li class="mb-1">نظام تنبيهات ذكي</li>
-          <li class="mb-1">منصة مقايضة مجتمعية</li>
-          <li class="mb-1">وضع الطوارئ للازمات</li>
+          <li class="mb-1">تتبع أسعار المنتجات والمتاجر</li>
+          <li class="mb-1">نظام تنبيهات ذكي لانخفاض الاسعار</li>
+          <li class="mb-1">منصة مقايضة مجتمعية موثوقة</li>
+          <li class="mb-1">محادثات مباشرة للتفاوض</li>
+          <li class="mb-1">قائمة مفضلات وعروض خاصة</li>
+          <li class="mb-1">البحث بالموقع والتصنيفات</li>
         </ul>
       </span>
     </div>
@@ -33,7 +35,7 @@ import SingleFavoriteStructure from "./SingleFavoriteStructure.vue";
       <div>
         <span class="text-black dark:text-white font-medium text-[16px] mb-3 block">تواصل معنا</span>
         <span class="text-gray-600 dark:text-gray-300 font-medium text-[14px] mb-2 block">
-          للدعم و الاستفسارات: support@pricebeats.app
+          للدعم و الاستفسارات: support@pricepulse.app
         </span>
       </div>
     </div>
