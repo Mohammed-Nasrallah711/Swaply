@@ -35,6 +35,28 @@ function buildCacheKey(config) {
   return key;
 }
 
+// Function to invalidate cache for specific URL patterns
+export function invalidateCache(pattern) {
+  if (!pattern) {
+    inMemoryCache.clear();
+    return;
+  }
+  
+  const keysToDelete = [];
+  for (const [key, value] of inMemoryCache.entries()) {
+    try {
+      const cacheKey = JSON.parse(key);
+      if (cacheKey.u && cacheKey.u.includes(pattern)) {
+        keysToDelete.push(key);
+      }
+    } catch (e) {
+      // Invalid key format, skip
+    }
+  }
+  
+  keysToDelete.forEach(key => inMemoryCache.delete(key));
+}
+
 axiosClient.interceptors.request.use((config) => {
   if (
     config.method === "get" &&

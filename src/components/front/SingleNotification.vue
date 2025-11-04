@@ -47,15 +47,15 @@ watch(
     <div class="flex items-center gap-4">
       <div class="icon">
         <template v-if="from == 'mdi'">
-          <MdiIcon :icon="icon" class="w-[30px] h-[30px] text-gray-900 dark:text-white" />
+          <MdiIcon :icon="icon" class="w-[30px] h-[30px] text-blue-800 dark:text-white" />
         </template>
         <template v-else>
-          <component :is="icon" class="w-[30px] h-[30px] text-gray-900 dark:text-white" />
+          <component :is="icon" class="w-[30px] h-[30px] text-blue-800 dark:text-white dark:fill-white" />
         </template>
       </div>
       <div>
         <div>
-          <span class="text-gray-900 dark:text-white font-medium text-[16px] mb-1 block">
+          <span class="text-blue-600 dark:text-white font-medium text-[16px] mb-1 block">
             {{ title }}
           </span>
           <span class="text-gray-600 dark:text-gray-300 font-normal text-[14px] mb-2 block">

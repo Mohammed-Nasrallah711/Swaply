@@ -3,10 +3,27 @@ import { PhoneIcon, ShieldCheckIcon } from "@heroicons/vue/24/outline";
 import SecondaryTitle from "./global/SecondaryTitle.vue";
 import { useAuthStore } from "../../stores/auth/auth";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
+import axiosClient from "../../axiosClient";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+
+const reliabilityScore = ref(0);
+const loadingScore = ref(false);
+
+onMounted(async () => {
+  try {
+    loadingScore.value = true;
+    const response = await axiosClient.get('/chat/user/reliability-score');
+    reliabilityScore.value = response.data.score || 0;
+  } catch (error) {
+    console.error('Failed to fetch reliability score:', error);
+    reliabilityScore.value = 0;
+  } finally {
+    loadingScore.value = false;
+  }
+});
 
 const joinedAt = computed(() => {
   const createdAt = user.value && user.value.created_at;
@@ -61,10 +78,15 @@ const letterImage = computed(() => {
     <div class="degree-ability mt-4">
       <div class="flex items-center justify-between mb-2">
         <span class="font-normal text-gray-700 dark:text-gray-300 text-[13px]">درجة الموثوقية</span>
-        <span class="text-blue-950 dark:text-white font-normal text-[13px]">87%</span>
+        <span class="text-blue-950 dark:text-white font-normal text-[13px]">
+          {{ loadingScore ? '...' : Math.round(reliabilityScore) + '%' }}
+        </span>
       </div>
       <div class="w-full h-2 rounded-md bg-blue-200 dark:bg-gray-700 relative">
-        <div class="absolute left-0 top-0 h-full w-[87%] bg-blue-950 dark:bg-white rounded-md"></div>
+        <div 
+          class="absolute left-0 top-0 h-full bg-blue-950 dark:bg-white rounded-md transition-all duration-300"
+          :style="{ width: Math.min(100, Math.max(0, reliabilityScore)) + '%' }"
+        ></div>
       </div>
     </div>
 

@@ -17,11 +17,12 @@ import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 import { StarIcon } from "@heroicons/vue/24/outline";
 import { ShieldCheckIcon } from "@heroicons/vue/24/outline";
 import { CalendarIcon } from "@heroicons/vue/24/outline";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import SecondButton from "./SecondButton.vue";
 import useFormats from "../../mixins/formats";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../../stores/auth/auth";
+import axiosClient from "../../axiosClient";
 
 const props = defineProps({
   item: {
@@ -40,6 +41,35 @@ function toggle() {
 }
 const isSendRequest = computed(() => {
   return props.item.myResponse ? true : false;
+});
+
+const userReliabilityScore = ref(null);
+const userRating = ref(null);
+
+const fetchUserData = async () => {
+  if (props.item?.user?.id) {
+    // Fetch reliability score
+    try {
+      const response = await axiosClient.get('/chat/user/reliability-score', {
+        params: { user_id: props.item.user.id }
+      });
+      userReliabilityScore.value = response.data.score || 0;
+    } catch (error) {
+      userReliabilityScore.value = 0;
+    }
+    
+    // Get store rating from barter data or set default
+    userRating.value = props.item?.user?.rating || props.item?.user?.store?.rating || 4.0;
+  }
+};
+
+onMounted(() => {
+  fetchUserData();
+});
+
+// Watch for item changes
+watch(() => props.item?.user?.id, () => {
+  fetchUserData();
 });
 
 const requestStatus = computed(() => {
@@ -76,7 +106,7 @@ const requestStatus = computed(() => {
     <div class="flex items-center justify-between mb-4">
       <div class="info flex items-center gap-2">
         <div class="icon bg-gray-100 dark:bg-gray-700 h-10 w-10 flex items-center justify-center rounded-full">
-          <UserIcon class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+          <UserIcon class="w-5 h-5 text-gray-950 dark:text-gray-300" />
         </div>
         <div class="">
           <span class="font-normal flex items-center">
@@ -93,8 +123,8 @@ const requestStatus = computed(() => {
                leading-none">موثوق</span>
             </span>
           </span>
-          <div class="degree text-gray-400 dark:text-gray-300 text-xs font-normal mt-1">
-            درجة الموثوقية: 80%
+          <div class="degree text-slate-500 dark:text-gray-300 text-xs font-normal mt-1">
+            درجة الموثوقية: {{ userReliabilityScore !== null ? Math.round(userReliabilityScore) + '%' : '...' }}
           </div>
         </div>
       </div>
@@ -167,7 +197,7 @@ const requestStatus = computed(() => {
                   </span>
                 </span>
                 <span class="value text-black font-normal text-[14px] dark:text-white">
-                  <span class="rate ml-1">4.8/5</span>
+                  <span class="rate ml-1">{{ userRating !== null ? userRating.toFixed(1) : '4.0' }}/5</span>
                   <span class="opration">({{ item.batar_count ?? 0 }} عملية)</span>
                 </span>
               </div>
@@ -212,7 +242,7 @@ const requestStatus = computed(() => {
                   </span>
                 </span>
                 <span class="value text-green-700 font-normal text-[14px] dark:text-green-400">
-                  87%
+                  {{ userReliabilityScore !== null ? Math.round(userReliabilityScore) + '%' : '...' }}
                 </span>
               </div>
             </div>
@@ -296,7 +326,7 @@ const requestStatus = computed(() => {
                     <span class="flex justify-center">
                       <template v-if="!item.accepted_by">
                         <span @click="$emit('acceptUser', response)"
-                          class="border-2 border-green-600 text-sm rounded-lg cursor-pointer px-4 py-1 text-green-600 font-normal flex justify-center items-center transition-colors hover:text-white hover:bg-green-600">قبول</span>
+                          class="border-2 border-green-600 text-sm rounded-lg cursor-pointer px-4 py-1 text-green-700 font-normal flex justify-center items-center transition-colors hover:text-white hover:bg-green-600">قبول</span>
                       </template>
                       <template v-else>
                         <span v-if="response.user_id == item.accepted_by"

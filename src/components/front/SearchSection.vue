@@ -91,10 +91,10 @@ onMounted(async () => {
       </div>
     </Combobox>
     <div class="suggestion flex items-center mt-2">
-      <span class="text-[12px] text-gray-400 font-normal mx-4">مقترح:</span>
+      <span class="text-[12px] text-gray-600 font-normal mx-4">مقترح:</span>
       <ul class="flex items-center gap-1">
         <li
-          class="text-blue-800 bg-blue-200 dark:bg-blue-600/30 dark:text-blue-400 text-[12px] block py-1 px-3 cursor-pointer hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all rounded-lg"
+          class="text-blue-800 bg-blue-200 dark:bg-blue-600/30 dark:text-blue-300 text-[12px] block py-2 px-3 cursor-pointer hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all rounded-lg leading-none"
           v-for="value in categories.slice(0, 4)" :key="value" @click="suggestionClick(value)">
           {{ value.name }}
         </li>

@@ -125,7 +125,7 @@
                 <div class="flex justify-end mt-1 items-center">
                   <span class="flex items-center gap-2">
                     <span class="font-normal text-gray-800 dark:text-gray-100 text-[28px]">
-                      {{ product.rating }}
+                      {{ product?.store?.rating ? parseFloat(product.store.rating).toFixed(1) : '4.0' }}
                     </span>
                     <StarIcon class="text-amber-400 w-8 h-8" />
                   </span>
@@ -212,6 +212,8 @@ import {
   computed,
   watchEffect,
   reactive,
+  onMounted,
+  onUnmounted,
 } from "vue";
 import { ClockIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import {
@@ -232,7 +234,7 @@ import {
 import MdiIcon from "./MdiIcon.vue";
 
 import format from "../../mixins/formats";
-import axiosClient from "../../axiosClient";
+import axiosClient, { invalidateCache } from "../../axiosClient";
 import { useCurrencyStore } from "../../stores/currencyStore";
 import MainButtonForMyProduct from "./MainButtonForMyProduct.vue";
 import { useCityStore } from "../../stores/city";
@@ -338,28 +340,88 @@ function closeDialog() {
   emit("update:modelValue", false);
 }
 
+const loadProduct = async (forceRefresh = false) => {
+  if (!props.productId) return;
+  
+  product.value = null;
+  usdPrice.current_price = 0;
+  usdPrice.old_price = 0;
+  
+  if (forceRefresh) {
+    // Invalidate cache for this specific product before fetching
+    if (props.isForMe) {
+      invalidateCache(`merchant/store/products/${props.productId}`);
+    } else {
+      invalidateCache(`product/view/${props.productId}`);
+    }
+  }
+  
+  if (props.isForMe) {
+    const response = await axiosClient.get(
+      `merchant/store/products/${props.productId}`
+    );
+    if (response.status == 200) {
+      product.value = response.data.product;
+    }
+  } else {
+    const response = await axiosClient.get(`product/view/${props.productId}`, { cache: { ttl: 5 * 60 * 1000 } });
+    if (response.status == 200) {
+      product.value = response.data.product;
+    }
+  }
+};
+
 watch(
   () => props.productId,
   async () => {
-    // if we can find the product in the list via injected cache later
-    product.value = null;
-    usdPrice.current_price = 0;
-    usdPrice.old_price = 0;
-    if (props.isForMe) {
-      const response = await axiosClient.get(
-        `merchant/store/products/${props.productId}`
-      );
-      if (response.status == 200) {
-        product.value = response.data.product;
-      }
-    } else {
-      const response = await axiosClient.get(`product/view/${props.productId}`, { cache: { ttl: 5 * 60 * 1000 } });
-      if (response.status == 200) {
-        product.value = response.data.product;
-      }
+    await loadProduct();
+  }
+);
+
+// Watch for dialog opening to refresh if product was recently updated
+watch(
+  () => props.modelValue,
+  async (isOpen) => {
+    if (isOpen && props.productId) {
+      // Refresh product data when dialog opens to ensure latest data
+      await loadProduct(true);
     }
   }
 );
+
+// Listen to product update events
+const handleProductUpdate = (updatedProduct) => {
+  if (product.value && updatedProduct?.id === product.value.id) {
+    // Product was updated, refresh the dialog
+    loadProduct(true);
+  }
+};
+
+const handleOfferUpdate = (offerData) => {
+  if (product.value && offerData?.productId === product.value.id) {
+    // Offer was updated for this product, refresh
+    loadProduct(true);
+  }
+};
+
+const handleOfferAdded = (offerData) => {
+  if (product.value && offerData?.productId === product.value.id) {
+    // Offer was added for this product, refresh
+    loadProduct(true);
+  }
+};
+
+onMounted(() => {
+  emitter.on("productUpdated", handleProductUpdate);
+  emitter.on("offerUpdated", handleOfferUpdate);
+  emitter.on("offerAdded", handleOfferAdded);
+});
+
+onUnmounted(() => {
+  emitter.off("productUpdated", handleProductUpdate);
+  emitter.off("offerUpdated", handleOfferUpdate);
+  emitter.off("offerAdded", handleOfferAdded);
+});
 
 const sendReport = async () => {
   try {

@@ -41,7 +41,7 @@ const { getRelativeTime } = useFormats();
       </span>
     </div>
     <div class="flex items-center gap-1">
-      <p class="time text-[12px] font-normal text-gray-500 dark:text-gray-300">
+      <p class="time text-[12px] font-normal text-gray-600 dark:text-gray-300">
         {{ getRelativeTime(time).replace("قبل", "منذ") }}
       </p>
       <span>

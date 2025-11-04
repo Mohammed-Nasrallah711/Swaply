@@ -193,6 +193,11 @@ const submit = handleSubmit(async (values) => {
           "success",
           `تم تعديل المنتج ${values.name.name} بنجاح !`,
         ]);
+        // Emit event to update product dialog and other sections
+        emitter.emit("productUpdated", {
+          id: props.productEdit.id,
+          ...(response.data.product || response.data)
+        });
         emit("fetchProducts");
         closeDialog();
       } return;

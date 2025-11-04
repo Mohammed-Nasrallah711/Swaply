@@ -34,10 +34,10 @@
     </template>
     <template #actions="item">
       <div class="flex gap-2 justify-center">
-        <button @click="openEditModal(item.item)" class="bg-blue-500 text-white px-3 py-1 rounded">
+        <button @click="openEditModal(item.item)" class="bg-blue-600 text-white px-3 py-1 rounded">
           تعديل
         </button>
-        <button @click="deleteCategory(item.item)" class="bg-red-500 text-white px-3 py-1 rounded">
+        <button @click="deleteCategory(item.item)" class="bg-red-600 text-white px-3 py-1 rounded">
           حذف
         </button>
       </div>

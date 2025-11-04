@@ -58,10 +58,10 @@ const data = [
         }">
           <template v-if="item.icon">
             <component :is="item.icon" class="w-16 h-16 text-gray-700 dark:text-gray-300" />
-            <p class="title text-gray-700 dark:text-gray-200 font-medium text-[18px] my-2">
+            <p class="title text-gray-700 dark:text-gray-100 font-medium text-[18px] my-2">
               {{ item.title }}
             </p>
-            <p class="text text-[14px] text-gray-600 dark:text-gray-400">
+            <p class="text text-[14px] text-gray-600 dark:text-gray-300">
               {{ item.text }}
             </p>
           </template>

@@ -36,11 +36,11 @@
         <div
           class="bg-white border border-gray-200 dark:bg-gray-700 dark:border-gray-700 rounded-lg p-6 pb-3 transition-colors duration-200">
           <div class="flex justify-between items-center mb-6">
-            <h4 class="text-blue-400 dark:text-blue-200 text-[20px] font-medium">
+            <h4 class="text-blue-600 dark:text-blue-200 text-[20px] font-medium">
               آخر المستخدمين انضماما
             </h4>
             <button @click="$router.push({ name: 'dashboard-user' })"
-              class="border-2 text-[12px] text-nowrap text-blue-400 border-blue-400 dark:text-blue-200 dark:border-blue-200 rounded-lg px-3 py-[6px] font-normal transition-all duration-200 hover:bg-blue-400 hover:text-white">
+              class="border-2 text-[12px] text-nowrap text-blue-600 border-blue-400 dark:text-blue-200 dark:border-blue-200 rounded-lg px-3 py-[6px] font-normal transition-all duration-200 hover:bg-blue-400 hover:text-white">
               عرض المزيد
             </button>
           </div>
@@ -88,11 +88,11 @@
       class="bg-white border border-gray-200 overflow-hidden dark:bg-gray-700 dark:shadow-gray-700 dark:border-gray-700 shadow-md rounded-lg p-6 pb-3 flex-1 max-h-[25rem] min-w-[280px] transition-colors duration-200"
       :class="{ 'overflow-y-auto': showAll }">
       <div class="flex justify-between items-center gap-6 mb-6">
-        <h4 class="text-blue-400 dark:text-blue-200 text-[20px] font-medium text-nowrap">
+        <h4 class="text-blue-600 dark:text-blue-200 text-[20px] font-medium text-nowrap">
           آخر الإشعارات
         </h4>
         <button v-if="notifications.data?.length > 4" @click="showAll = !showAll"
-          class="border-2 text-[12px] text-nowrap text-blue-400 dark:text-blue-200 border-blue-500 dark:border-blue-200 rounded-lg px-3 py-[6px] font-normal transition-all duration-200 hover:bg-blue-500 hover:text-white dark:hover:text-white">
+          class="border-2 text-[12px] text-nowrap text-blue-600 dark:text-blue-200 border-blue-500 dark:border-blue-200 rounded-lg px-3 py-[6px] font-normal transition-all duration-200 hover:bg-blue-500 hover:text-white dark:hover:text-white">
           {{ showAll ? "عرض أقل" : "عرض الكل" }}
         </button>
       </div>
@@ -142,18 +142,23 @@ import {
   UsersIcon,
 } from "@heroicons/vue/24/outline";
 import HeaderPage from "../../components/dashboard/global/HeaderPage.vue";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import axiosClient from "../../axiosClient";
 import format from "../../mixins/formats";
+import { echo } from "../../echo";
+import { useAuthStore } from "../../stores/auth/auth";
+import { storeToRefs } from "pinia";
 
 const { formatDate } = format();
 const showAll = ref(false);
 const loading = ref(true);
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 const cardItems = reactive([
   {
     title: "المنتجات",
     icon: ShoppingBagIcon,
-    style: "bg-amber-100 text-amber-600 border-amber-200",
+    style: "bg-amber-100 text-amber-700 border-amber-200",
     number: 0,
   },
   {
@@ -198,6 +203,8 @@ const getIcon = (icon) => {
   }
 };
 
+let notificationChannel = null;
+
 onMounted(async () => {
   loading.value = true;
   try {
@@ -226,6 +233,33 @@ onMounted(async () => {
   } catch (e) {
   } finally {
     loading.value = false;
+  }
+
+  // Setup real-time listener for admin notifications
+  if (user.value?.id) {
+    notificationChannel = echo.private(`App.Models.User.${user.value.id}`);
+    
+    notificationChannel.notification((notification) => {
+      // Add new notification to the beginning of the array
+      if (notification.type === 'admin_notification') {
+        const newNotification = {
+          id: notification.id,
+          type: notification.type,
+          data: notification,
+          created_at: new Date().toISOString(),
+          read_at: null,
+        };
+        
+        notifications.value.data = notifications.value.data || [];
+        notifications.value.data.unshift(newNotification);
+      }
+    });
+  }
+});
+
+onUnmounted(() => {
+  if (notificationChannel && user.value?.id) {
+    echo.leave(`App.Models.User.${user.value.id}`);
   }
 });
 </script>

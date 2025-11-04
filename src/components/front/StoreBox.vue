@@ -24,7 +24,13 @@ const { currencyFormat } = format();
 const currencyStore = useCurrencyStore();
 const priceUSD = ref(0);
 const numericPrice = computed(() => Number(props.price));
-const numericRating = computed(() => Number(props.rating));
+const numericRating = computed(() => {
+  const rating = Number(props.rating);
+  return isNaN(rating) ? 4.0 : rating;
+});
+const formattedRating = computed(() => {
+  return numericRating.value.toFixed(1);
+});
 const priceType = computed(() => {
   return calculatePriceRating(numericPrice.value, props.recentPrices, props.priceRating);
 });
@@ -57,7 +63,7 @@ onMounted(async () => {
 
     <div class="flex items-center justify-between text-gray-700 dark:text-gray-300 font-normal">
       <span class="flex items-center gap-2 mt-3">
-        <span>{{ rating }}</span>
+        <span>{{ formattedRating }}</span>
         <StarIcon class="w-5 h-5 text-amber-400" />
       </span>
       <span>{{ priceUSD }}</span>
