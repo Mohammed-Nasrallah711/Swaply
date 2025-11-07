@@ -60,7 +60,7 @@
                 <ErrorInputText :error-message="(imageMeta.touched || submitCount > 0) ? imageError : ''" />
               </div>
 
-              <MainButton :label="isEditPage ? 'تعديل المنتج' : 'نشر المنتج'" class="bg-gray-800 hover:bg-gray-800/95"
+              <MainButton :label="isEditPage ? 'تعديل المنتج' : 'نشر المنتج'" class="bg-blue-700 hover:bg-blue-500"
                 type="submit" />
             </form>
             <!-- زر الاغلاق -->

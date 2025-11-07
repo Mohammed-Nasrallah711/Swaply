@@ -27,12 +27,12 @@ const items = reactive([
     isEnable: user.value?.notification_methods?.email,
   },
   {
-    id: "whats",
+    id: "whatsapp",
     icon: mdiWhatsapp,
     from: "mdi",
     title: "إشعارات الواتساب (WhatsApp)",
     description: "تلقي التنبيهات عبر رسائل الواتساب WhatsApp",
-    isEnable: user.value?.notification_methods?.whats,
+    isEnable: user.value?.notification_methods?.whatsapp,
   },
 ]);
 </script>
