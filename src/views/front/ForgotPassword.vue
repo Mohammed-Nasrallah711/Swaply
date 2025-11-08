@@ -10,6 +10,7 @@ import * as yup from "yup";
 import ErrorInputText from "../../components/front/global/ErrorInputText.vue";
 import { useAuthStore } from "../../stores/auth/auth";
 import { storeToRefs } from "pinia";
+import { KeyIcon } from "@heroicons/vue/24/outline";
 
 const authStore = useAuthStore();
 const { loading, backErrors, forgotMessage } =

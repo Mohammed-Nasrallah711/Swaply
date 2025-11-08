@@ -82,9 +82,8 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const verifyOtp = async (identifier, otp) => {
+    loading.value = true;
     try {
-      loading.value = true;
-
       const response = await axiosClient.post("/verify-otp", {
         otp: otp,
         identifier: identifier,
@@ -100,10 +99,12 @@ export const useAuthStore = defineStore("auth", () => {
         });
       }
     } catch (error) {
+      const errorMessage = error?.response?.data?.message || "الكود غير صحيح، يرجى المحاولة مرة أخرى";
       emitter.emit("showNotificationAlert", [
         "error",
-        " الكود غير صحيح أو منتهي الصلاحية",
+        errorMessage,
       ]);
+      throw error; // Re-throw so component can handle it
     } finally {
       loading.value = false;
     }
@@ -192,10 +193,16 @@ export const useAuthStore = defineStore("auth", () => {
     loading.value = true;
     try {
       await getCsrfToken();
-      const response = await axiosClient.get("/auth/user");
-      if (response.data) {
+      const response = await axiosClient.get("/auth/user", {
+        validateStatus: (status) => status === 200 || status === 401
+      });
+      
+      if (response.status === 200 && response.data) {
         user.value = response.data;
         isAuth.value = true;
+      } else {
+        user.value = null;
+        isAuth.value = false;
       }
     } catch (error) {
       user.value = null;

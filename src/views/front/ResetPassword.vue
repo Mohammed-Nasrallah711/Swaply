@@ -4,6 +4,7 @@ import BackButton from "../../components/front/global/BackButton.vue";
 import MainButton from "../../components/front/global/MainButton.vue";
 import { VueSpinnerIos } from "vue3-spinners";
 import { inject, ref } from "vue";
+import { useRoute } from "vue-router";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { useAuthStore } from "../../stores/auth/auth";

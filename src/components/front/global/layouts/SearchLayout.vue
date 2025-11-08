@@ -52,14 +52,27 @@ const searchFor = async () => {
     dependent: dependentPrice.value.name,
     categories: dependentCategories.value.name,
   };
-  await searchStore.fetchAllStoresHasProdcut(
-    route.query.id,
-    current_page.value,
-    JSON.stringify({
-      category: dependentCategories.value.value,
-      dependent: dependentPrice.value.value,
-    })
-  );
+  
+  const filter = JSON.stringify({
+    category: dependentCategories.value.value,
+    dependent: dependentPrice.value.value,
+  });
+
+  // Check if this is a category search or product search
+  if (route.query.type === 'category' && route.query.categoryId) {
+    await searchStore.fetchAllStoresByCategory(
+      route.query.categoryId,
+      current_page.value,
+      filter
+    );
+  } else if (route.query.id) {
+    await searchStore.fetchAllStoresHasProdcut(
+      route.query.id,
+      current_page.value,
+      filter
+    );
+  }
+  
   router.replace({
     name: router.currentRoute.value.name,
     query: { ...route.query, ...query },
@@ -88,8 +101,12 @@ onMounted(() => {
 });
 
 onMounted(async () => {
-  if (route.query.id && route.query.for)
+  // Check if this is a category search or product search
+  if (route.query.type === 'category' && route.query.categoryId && route.query.for) {
+    await searchStore.fetchAllStoresByCategory(route.query.categoryId);
+  } else if (route.query.id && route.query.for) {
     await searchStore.fetchAllStoresHasProdcut(route.query.id);
+  }
   await categoryStore.fetchAllCategoriesIds();
 });
 </script>

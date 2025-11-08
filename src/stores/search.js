@@ -33,6 +33,29 @@ export const useSearchStore = defineStore("search", () => {
     }
   };
 
+  const fetchAllStoresByCategory = async (categoryId, page = 1, filter = {}) => {
+    try {
+      loading.value = true;
+
+      const response = await axiosClient.get(`/search/stores-by-category/${categoryId}`, {
+        params: { page, filter },
+      });
+
+      if (page === 1) {
+        stores.value = response.data.stores.data;
+      } else {
+        stores.value = [...stores.value, ...response.data.stores.data];
+      }
+
+      current_page.value = response.data.stores.current_page;
+      last_page.value = response.data.stores.last_page;
+    } catch (e) {
+      errors.value = e;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     stores,
     last_page,
@@ -40,5 +63,6 @@ export const useSearchStore = defineStore("search", () => {
     loading,
     errors,
     fetchAllStoresHasProdcut,
+    fetchAllStoresByCategory,
   };
 });

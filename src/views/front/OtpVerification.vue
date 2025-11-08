@@ -7,7 +7,7 @@ import MainButton from "../../components/front/global/MainButton.vue";
 import BackButton from "../../components/front/global/BackButton.vue";
 import { useAuthStore } from "../../stores/auth/auth";
 import { storeToRefs } from "pinia";
-
+import { inject } from "vue";
 
 const schema = yup.object({
   otp: yup
@@ -24,9 +24,16 @@ const [otp, otpAttrs] = defineField("otp");
 const authStore = useAuthStore();
 const { loading } = storeToRefs(authStore);
 const identifier = ref(localStorage.getItem("resetIdentifier"));
+const otpError = ref("");
+const emitter = inject("emitter");
 
 const onSubmit = handleSubmit(async () => {
-  await authStore.verifyOtp(identifier.value, otp.value);
+  otpError.value = "";
+  try {
+    await authStore.verifyOtp(identifier.value, otp.value);
+  } catch (error) {
+    otpError.value = error?.response?.data?.message || "الكود غير صحيح، يرجى المحاولة مرة أخرى";
+  }
 });
 </script>
 
@@ -46,16 +53,19 @@ const onSubmit = handleSubmit(async () => {
       </span>
 
       <div class="mb-4">
-        <input v-model="otp" v-bind="otpAttrs" type="text" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6"
+        <input dir="ltr" v-model="otp" v-bind="otpAttrs" type="text" placeholder="أدخل الكود المكون من 6 أرقام" maxlength="6"
           class="focus:border-gray-500 focus:ring-gray-500 rounded-md bg-gray-100 dark:bg-gray-700 dark:text-white block w-full text-center text-xl tracking-[1rem] placeholder:text-[14px] placeholder:font-normal dark:placeholder-gray-400"
           :class="{
             'border-red-600 focus:border-red-500 dark:text-white focus:ring-red-600 bg-red-100/70 placeholder:text-red-500':
-              errors.otp,
+              errors.otp || otpError,
             'focus:border-gray-500 border-none dark:text-white focus:ring-gray-500  bg-gray-100 dark:bg-gray-700 dark:placeholder-gray-400':
-              !errors.otp,
+              !errors.otp && !otpError,
           }" />
-        <span v-if="errors.otp" class="text-red-500 text-sm">
+        <span v-if="errors.otp" class="text-red-500 text-sm block mt-1">
           {{ errors.otp }}
+        </span>
+        <span v-if="otpError && !errors.otp" class="text-red-500 text-sm block mt-1">
+          {{ otpError }}
         </span>
       </div>
 

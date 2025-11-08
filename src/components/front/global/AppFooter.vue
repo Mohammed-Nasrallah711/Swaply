@@ -54,16 +54,16 @@ const columnsData = [
       <!-- Social icons -->
       <div class="icons flex gap-2 mt-4 justify-center sm:justify-start">
         <a href="http://x.com" target="_blank" class="transition-all hover:rotate-[360deg]">
-          <MdiIcon class="text-gray-400 dark:text-gray-300" :icon="mdiTwitter" />
+          <MdiIcon class="text-gray-800 dark:text-gray-300" :icon="mdiTwitter" />
         </a>
         <a href="http://facebook.com" target="_blank" class="transition-all hover:rotate-[360deg]">
-          <MdiIcon class="text-gray-400 dark:text-gray-300" :icon="mdiFacebook" />
+          <MdiIcon class="text-gray-800 dark:text-gray-300" :icon="mdiFacebook" />
         </a>
         <a href="http://youtube.com" target="_blank" class="transition-all hover:rotate-[360deg]">
-          <MdiIcon class="text-gray-400 dark:text-gray-300" :icon="mdiYoutube" />
+          <MdiIcon class="text-gray-800 dark:text-gray-300" :icon="mdiYoutube" />
         </a>
         <a href="http://instagram.com" target="_blank" class="transition-all hover:rotate-[360deg]">
-          <MdiIcon class="text-gray-400 dark:text-gray-300" :icon="mdiInstagram" />
+          <MdiIcon class="text-gray-800 dark:text-gray-300" :icon="mdiInstagram" />
         </a>
       </div>
     </div>
