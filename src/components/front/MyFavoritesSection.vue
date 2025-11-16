@@ -176,7 +176,7 @@ onUnmounted(() => {
   </div>
   <div class="flex justify-center items-center h-24" v-else-if="!loading && !products.length">
     <div>
-      <span class="text-gray-700 dark:text-gray-300 font-normal block mb-4">لم تقم حتى الان باضافة اي منتج الى قائمتك
+      <span class="text-gray-700 dark:text-gray-300 font-normal block mb-4">لم تقم حتى الآن بإضافة أي منتج إلى قائمتك
         المفضلة</span>
     </div>
   </div>

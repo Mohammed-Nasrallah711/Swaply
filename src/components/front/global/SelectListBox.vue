@@ -25,7 +25,7 @@ const value = computed({
   <Listbox v-model="value">
     <div class="relative w-36 h-10">
       <ListboxButton v-slot="{ open }"
-        class="w-full h-10 flex text-[14px] items-center justify-between rounded-md bg-gray-100 dark:bg-gray-700 py-3 px-3 text-gray-700 font-normal dark:text-white">
+        class="w-full h-10 border flex text-[14px] items-center justify-between rounded-lg bg-white dark:bg-gray-700 py-3 px-3 text-gray-700 font-normal dark:text-white">
         <span>{{ value?.name || label }}</span>
         <ChevronUpIcon class="w-4 h-4 text-gray-500 dark:text-gray-300 mt-1" v-if="open" />
         <ChevronDownIcon class="w-4 h-4 text-gray-500 dark:text-gray-300 mt-1" v-else />

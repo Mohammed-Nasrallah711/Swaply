@@ -17,6 +17,10 @@ const props = defineProps({
   distance: Number,
   recentPrices: Array,
   priceRating: String, // Backend price rating
+  // Additional props for category search display
+  productName: String,
+  productCategory: String,
+  isCategorySearch: Boolean,
 });
 
 const { calculatePriceRating } = usePrice();
@@ -39,6 +43,11 @@ const cityStore = useCityStore();
 const distance = computed(() => {
   return cityStore.distanceToSpecificCity(props.cityId);
 });
+
+// Prefer explicit flag, but fall back to presence of product/category props
+const isCategoryMode = computed(() => {
+  return !!props.isCategorySearch || (!!props.productName && !!props.productCategory);
+});
 onMounted(async () => {
   priceUSD.value = await currencyStore.convertToUSD(numericPrice.value);
 });
@@ -47,8 +56,16 @@ onMounted(async () => {
 <template>
   <div class="border border-gray-200 dark:border-gray-700 py-8 px-6 rounded-xl mb-2 bg-white dark:bg-gray-900">
     <div class="flex justify-between items-center font-normal text-[26px]">
-      <div class="flex gap-2 items-center font-normal text-[26px]">
-        <span class="text-gray-900 dark:text-gray-100">{{ storeName }}</span>
+      <div class="flex gap-2 items-start font-normal text-[26px]">
+        <div class="flex flex-col">
+          <span class="text-gray-900 dark:text-gray-100">
+            {{ isCategoryMode ? productName : storeName }}
+          </span>
+          <span v-if="isCategoryMode"
+            class="text-[12px] text-gray-500 dark:text-gray-400 leading-tight mt-1 text-right">
+            {{ storeName }}
+          </span>
+        </div>
         <span
           class="cursor-default border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 gap-[2px] text-[10px] py-1 pr-1 flex items-center"
           v-if="isCertified">

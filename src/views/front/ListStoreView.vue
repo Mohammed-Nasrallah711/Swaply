@@ -1,7 +1,7 @@
 <script setup>
 import SingleStoreBox from "../../components/front/SingleStoreBox.vue";
 import { useSearchStore } from "../../stores/search";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import useFormats from "../../mixins/formats";
 import { useRoute } from "vue-router";
@@ -15,6 +15,31 @@ const { stores, current_page, last_page, loading, errors } =
 const route = useRoute();
 
 const loadMoreTrigger = ref(null);
+
+// Flatten all products across stores and sort by numeric price ascending
+const entriesSorted = computed(() => {
+  const normalize = (v) => {
+    if (v === null || v === undefined) return Number.POSITIVE_INFINITY;
+    if (typeof v === "number") return v;
+    const s = String(v);
+    const sanitized = s.replace(/[^\d.]+/g, "");
+    const n = Number.parseFloat(sanitized);
+    return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
+  };
+  const list = [];
+  (stores.value || []).forEach((store) => {
+    (store.products || []).forEach((product) => {
+      list.push({
+        store,
+        product,
+        key: `${store.id}-${product.id}`,
+        numericPrice: normalize(product?.price),
+      });
+    });
+  });
+  list.sort((a, b) => a.numericPrice - b.numericPrice);
+  return list;
+});
 
 const fetchNextPage = async () => {
   if (current_page.value >= last_page.value || loading.value) return;
@@ -43,12 +68,21 @@ onMounted(() => {
 
 <template>
   <div class="sm:grid gap-2 sm:grid-cols-2 lg:block pb-6">
-    <template v-for="store in stores" :key="store.id">
-      <template v-for="product in store.products" :key="product.id">
-        <SingleStoreBox :price="product.price" :store-name="store.name" :last-update="timeAgo(product.updated_at)"
-          :is-certified="true" :rating="store.rating || 0.0" :city-id="+store.city_id" :recent-prices="product.recent_prices"
-          :image="store.image" :price-rating="store.price_rating" />
-      </template>
+    <template v-for="entry in entriesSorted" :key="entry.key">
+      <SingleStoreBox
+        :price="entry.product.price"
+        :store-name="entry.store.name"
+        :last-update="timeAgo(entry.product.updated_at)"
+        :is-certified="true"
+        :rating="entry.store.rating || 0.0"
+        :city-id="+entry.store.city_id"
+        :recent-prices="entry.product.recent_prices"
+        :image="entry.store.image"
+        :price-rating="entry.store.price_rating"
+        :product-name="entry.product.name"
+        :product-category="entry.product.category?.name"
+        :is-category-search="route.query.type === 'category'"
+      />
     </template>
     <div ref="loadMoreTrigger" class="w-full h-1"></div>
   </div>

@@ -64,7 +64,7 @@ watch(isFavorite, (newVal) => {
   if (newVal) {
     emitter.emit("showNotificationAlert", [
       "success",
-      "تم اضافة المنتج الى المفضلة!",
+      "تم اضافة المنتج إلى المفضلة!",
     ]);
   } else {
     emitter.emit("showNotificationAlert", [

@@ -18,6 +18,9 @@ const props = defineProps({
   image: String,
   recentPrices: Array,
   priceRating: String, // Backend price rating
+  // Optional props to support category-search presentation
+  productName: String,
+  isCategorySearch: Boolean,
 });
 
 const { currencyFormat } = format();
@@ -39,6 +42,11 @@ const cityStore = useCityStore();
 const distance = computed(() => {
   return cityStore.distanceToSpecificCity(props.cityId);
 });
+
+// Prefer explicit flag; fall back to presence of productName
+const isCategoryMode = computed(() => {
+  return !!props.isCategorySearch || !!props.productName;
+});
 onMounted(async () => {
   priceUSD.value = await currencyStore.convertToUSD(numericPrice.value);
 });
@@ -51,7 +59,14 @@ onMounted(async () => {
     <div class="py-8 px-6 rounded-xl mb-2">
       <div class="flex justify-between items-center font-normal text-[22px] xl:text-[26px]">
         <div class="flex gap-2 items-center font-normal text-[22px] xl:text-[26px]">
-          <span class="text-gray-900 dark:text-gray-100">{{ storeName }}</span>
+          <div class="flex flex-col">
+            <span class="text-gray-900 dark:text-gray-100">
+              {{ isCategoryMode ? productName : storeName }}
+            </span>
+            <span v-if="isCategoryMode" class="text-[12px] text-gray-500 dark:text-gray-400 leading-tight mt-1">
+              {{ storeName }}
+            </span>
+          </div>
           <span
             class="cursor-default border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 gap-[2px] text-[10px] py-1 pr-1 flex items-center"
             v-if="isCertified">

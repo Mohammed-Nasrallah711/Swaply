@@ -36,7 +36,7 @@ const priceOptions = [
   { id: 2, name: "حسب المسافة", value: "distance" },
   { id: 3, name: "حسب التقييم", value: "rating" },
 ];
-const dependentPrice = ref({ id: 1, name: "حسب السعر", value: "ar" });
+const dependentPrice = ref({ id: 1, name: "حسب السعر", value: "price" });
 
 const categoriesOptions = computed(() => {
   const allCategories = categories.value.map((cat) => {
@@ -53,10 +53,9 @@ const searchFor = async () => {
     categories: dependentCategories.value.name,
   };
   
-  const filter = JSON.stringify({
-    category: dependentCategories.value.value,
-    dependent: dependentPrice.value.value,
-  });
+  // Backend expects JSON 'filter' param; category route ignores 'category' inside filter
+  // To avoid 500s, only send 'dependent' in filter for category searches
+  const filter = JSON.stringify({ dependent: dependentPrice.value.value });
 
   // Check if this is a category search or product search
   if (route.query.type === 'category' && route.query.categoryId) {
@@ -109,6 +108,14 @@ onMounted(async () => {
   }
   await categoryStore.fetchAllCategoriesIds();
 });
+
+// Debug: Log raw stores payload (no table) when searching by category
+watch(stores, (list) => {
+  if (route.query.type === 'category') {
+    // eslint-disable-next-line no-console
+    console.log('Stores payload (category search):', list);
+  }
+}, { immediate: true });
 </script>
 
 <template>

@@ -61,12 +61,12 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await axiosClient.post("/forgot-password", credentials);
       if (response.status === 200) {
         forgotMessage.value = credentials.email
-          ? "تم ارسال رسالة الى الايمل الخاص بك"
-          : "تم ارسال رسالة الى رقم هاتفك";
+          ? "تم ارسال رسالة إلى الإيميل الخاص بك"
+          : "تم ارسال رسالة إلى رقم هاتفك";
 
         emitter.emit("showNotificationAlert", [
           "success",
-          "تم اعادة ضبط كلمة المرور بنجاح",
+          "تم إعادة ضبط كلمة المرور بنجاح",
         ]);
 
         setTimeout(() => {

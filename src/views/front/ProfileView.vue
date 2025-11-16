@@ -119,7 +119,7 @@ const getLabelById = (id) => {
 <template>
   <div
     class="header flex items-center justify-between fixed left-0 top-0 right-0 p-4 pt-20 border-b dark:border-gray-700 bg-gray-100 dark:bg-gray-800 z-50">
-    <div class="flex items-center gap-5 container mx-auto">
+    <div class="flex items-center gap-5 container">
       <div class="flex items-center gap-2">
         <Bars3Icon class="w-6 h-6 cursor-pointer block lg:hidden text-black dark:text-white"
           @click="isOpen = !isOpen" />

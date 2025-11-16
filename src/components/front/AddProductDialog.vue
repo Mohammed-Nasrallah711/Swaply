@@ -209,7 +209,7 @@ const submit = handleSubmit(async (values) => {
     if (response.status == 200) {
       emitter.emit("showNotificationAlert", [
         "success",
-        `تم اضافة المنتج ${values.name.name} بنجاح الى متجرك!`,
+        `تم اضافة المنتج ${values.name.name} بنجاح إلى متجرك!`,
       ]); emit("fetchProducts"); closeDialog();
     }
   } catch (e) { }
