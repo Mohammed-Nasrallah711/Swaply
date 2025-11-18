@@ -1,6 +1,7 @@
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 import tailwindRtl from "tailwindcss-rtl";
+import forms from "@tailwindcss/forms";
 
 export default {
   darkMode: "class",
@@ -12,5 +13,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindRtl, require("@tailwindcss/forms")],
+  plugins: [tailwindRtl, forms],
 };
