@@ -11,8 +11,7 @@ export default defineConfig({
     "@": fileURLToPath(new URL("./src", import.meta.url)),
   },
   server: {
-    // Only use proxy in development - production uses VITE_API_BASE_URL from .env
-    proxy: import.meta.env.DEV ? {
+    proxy: {
       "/api": {
         target: "http://127.0.0.1:8000",
         changeOrigin: true,
@@ -23,6 +22,6 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-    } : undefined,
+    },
   },
 });
