@@ -24,14 +24,18 @@
       <span>#{{ item.product_id }}</span>
     </template>
     <template #actions="item">
-      <div class="flex justify-center">
+      <div class="flex justify-center gap-2">
         <button v-if="item.item.status !== 'reviewed'" @click="markAsReviewed(item.item)"
-          class="text-blue-600 dark:text-slate-50 hover:underline">
+          class="text-blue-600 dark:text-slate-50 hover:underline px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20">
           مراجعة البلاغ
         </button>
         <span v-else class="px-3 py-1 rounded bg-green-600 text-white cursor-default">
           تمت المراجعة
         </span>
+        <button @click="deleteReport(item.item)"
+          class="text-red-600 dark:text-red-400 hover:underline px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+          حذف
+        </button>
       </div>
     </template>
 
@@ -109,6 +113,25 @@ const markAsReviewed = async (item) => {
       emitter.emit("showNotificationAlert", ["success", "تمت مراجعة البلاغ"]);
     }
   } catch (e) {
+    emitter.emit("showNotificationAlert", ["error", "فشلت عملية المراجعة"]);
+  }
+};
+
+// Delete Report
+const deleteReport = async (item) => {
+  if (!confirm("هل أنت متأكد من حذف هذا البلاغ؟")) {
+    return;
+  }
+  try {
+    const response = await axiosClient.delete(
+      `/admin/products/${cleanId(item.product_id)}/report`
+    );
+    if (response.status === 200) {
+      items.value = items.value.filter((i) => i.id !== item.id);
+      emitter.emit("showNotificationAlert", ["success", "تم حذف البلاغ بنجاح"]);
+    }
+  } catch (e) {
+    emitter.emit("showNotificationAlert", ["error", "فشلت عملية الحذف"]);
   }
 };
 

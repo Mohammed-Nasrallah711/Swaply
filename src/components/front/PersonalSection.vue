@@ -92,7 +92,7 @@ const letterImage = computed(() => {
 
     <div class="flex gap-4 items-center justify-between mt-4">
       <div class="box flex-1 text-center bg-green-100 dark:bg-green-700/60 p-4 rounded-lg">
-        <span class="font-semibold text-[32px] text-green-600 dark:text-green-300">11</span>
+        <span class="font-semibold text-[32px] text-green-600 dark:text-green-300">{{ user?.accurate_reports_count ?? 0 }}</span>
         <p class="font-normal text-[14px] text-green-800 dark:text-green-200">
           بلاغات دقيقة
         </p>

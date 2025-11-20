@@ -239,7 +239,7 @@ import { useCurrencyStore } from "../../stores/currencyStore";
 import MainButtonForMyProduct from "./MainButtonForMyProduct.vue";
 import { useCityStore } from "../../stores/city";
 import usePrice from "../../mixins/price";
-const { calculatePriceRating } = usePrice();
+const { calculatePriceRating, getPriceRatingFromBackend } = usePrice();
 const product = ref(null);
 const emitter = inject("emitter");
 const usdPrice = reactive({
@@ -310,13 +310,27 @@ const distance = computed(() => {
 });
 
 const priceType = computed(() => {
-  return calculatePriceRating(props.price, props.recentPrices, product.value?.price_rating);
+  if (!product.value) {
+    return { rating: "بلا تقييم", style: "text-gray-600 font-normal bg-gray-50 dark:bg-gray-900/30 dark:text-gray-400" };
+  }
+  
+  // Use backend price_rating if available, otherwise calculate from recent prices
+  if (product.value.price_rating && product.value.price_rating !== 'no_rating') {
+    const { getPriceRatingFromBackend } = usePrice();
+    return getPriceRatingFromBackend(product.value.price_rating);
+  }
+  
+  // Fallback to calculating from recent prices
+  const recentPrices = product.value.recent_prices ? product.value.recent_prices : [];
+  return calculatePriceRating(product.value.price, recentPrices, product.value.price_rating);
 });
 
 const props = defineProps({
   modelValue: { type: Boolean, required: true },
   productId: { type: Number },
   isForMe: { type: Boolean, default: false },
+  price: { type: Number, default: null },
+  recentPrices: { type: Array, default: () => [] },
 });
 
 const priceAfterOffer = computed(() => {
